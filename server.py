@@ -5,6 +5,15 @@ import os, http.server, socketserver
 ROOT = os.path.dirname(os.path.abspath(__file__))
 PORT = int(os.environ.get("PORT", "8080"))
 
+# set_base.py qo'ygan prefiks (GitHub Pages uchun, masalan "/noax-website").
+# Lokalda ham ishlashi uchun serverda uni kesib tashlaymiz.
+BASE = ""
+try:
+    import json as _json
+    BASE = _json.load(open(os.path.join(ROOT, ".basepath"))).get("base", "")
+except Exception:
+    pass
+
 EXTRA_MIME = {
     ".wasm": "application/wasm",
     ".glb": "model/gltf-binary",
@@ -34,6 +43,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
     def translate_path(self, path):
+        if BASE and (path == BASE or path.startswith(BASE + "/")):
+            path = path[len(BASE):] or "/"
         fs = super().translate_path(path)
         if os.path.isdir(fs):
             idx = os.path.join(fs, "index.html")
