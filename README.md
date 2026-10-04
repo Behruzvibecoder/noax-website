@@ -51,6 +51,35 @@ Lokalda esa `http://localhost:8080`.
 10 ta sahifa headless Chrome'da ochib ko'rildi: hammasida WebGL canvas ishlaydi,
 jami **591 ta resurs — 0 ta xato**, menyu orqali SPA o'tish (`/` → `/books`) ham ishlaydi.
 
+## GitHub'ga joylash
+
+Papka allaqachon git repo (`git init` + birinchi commit qilingan, ~22 MB).
+
+```bash
+cd mirror
+git remote add origin https://github.com/<foydalanuvchi>/<repo>.git
+git branch -M main
+git push -u origin main
+```
+
+### GitHub Pages'da jonli ishlashi uchun
+
+Sayt yo'llari ildizdan boshlanadi (`/books`, `/models/...`), shuning uchun:
+
+- **`<user>.github.io` repo'si yoki o'z domeningiz** bo'lsa — hech narsa qilish shart emas.
+- **Oddiy loyiha repo'si** (`<user>.github.io/<repo>/`) bo'lsa — push qilishdan oldin:
+
+```bash
+python3 set_base.py /<repo>     # barcha yo'llarga prefiks qo'shadi
+git commit -am "base path: /<repo>"
+# lokalda qayta sinash uchun: python3 set_base.py /
+```
+
+`.nojekyll` fayli qo'shilgan (Jekyll fayllarni o'zgartirmasligi uchun), `404.html` esa
+Pages'ning 404 sahifasi sifatida avtomatik ishlatiladi.
+
+> Fayl hajmlari: eng kattasi 1.6 MB (`TREVOR_earth-opt-06.glb`) — GitHub limitlariga mos.
+
 ## Eslatma
 
 Google Tag Manager / Analytics so'rovlari lokalda bajarilmaydi (muhim emas).
