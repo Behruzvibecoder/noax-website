@@ -67,8 +67,10 @@ def main() -> None:
 
     # WebGL asset yo'li (GLB / KTX2 / basis)
     js = open(CHUNK, encoding="utf-8").read()
-    js = re.sub(r'this\.path="[^"]*"', f'this.path="{new}"', js, count=1)
-    js = js.replace(f'setTranscoderPath({old}"/basis/")', 'setTranscoderPath(this.path+"/basis/")')
+    # Faqat WebGL ilovasining o'z klassidagi path (THREE.Loader'ning umumiy path'iga tegmaymiz)
+    js, n_js = re.subn(r'(this\.gl=new bQ,this\.path=")[^"]*(")', lambda m: m.group(1) + new + m.group(2), js)
+    if n_js != 1:
+        print(f"OGOHLANTIRISH: WebGL path topilmadi (n={n_js})")
     open(CHUNK, "w", encoding="utf-8").write(js)
 
     json.dump({"base": new}, open(STATE, "w"))
