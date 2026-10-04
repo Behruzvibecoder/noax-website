@@ -84,4 +84,7 @@ Pages'ning 404 sahifasi sifatida avtomatik ishlatiladi.
 
 Google Tag Manager / Analytics so'rovlari lokalda bajarilmaydi (muhim emas).
 Tashqi havolalar (YouTube, Spotify, Seated, do'kon) asl manzillariga ketadi.
-Kontent va dizayn Trevor Noah / itsoffbrand'ga tegishli — bu faqat o'rganish uchun nusxa.
+**Mualliflik huquqi:** bu repo'dagi barcha kontent, dizayn, 3D modellar, shriftlar va rasmlar
+Trevor Noah va sayt mualliflari (itsoffbrand.com) ga tegishli. Bu nusxa **faqat ta'lim /
+texnik o'rganish maqsadida** saqlanmoqda, tijoriy foydalanish uchun emas. Huquq egasi talab
+qilsa, repo o'chiriladi.
