@@ -1,0 +1,240 @@
+/**
+ * CORPUS motion layer.
+ * These are Noax's signature interactions, re-targeted at learning surfaces:
+ *   - clip-path wipe reveals on page enter
+ *   - staggered rise for lists/grids (--i driven)
+ *   - full-bleed menu overlay that unfolds with clip-path: inset()
+ *   - preloader counter
+ *   - infinite marquee
+ *   - "peel" card tilt with a bounce curve
+ * All of it collapses to zero duration under prefers-reduced-motion, exactly
+ * as Noax does with its reduced-motion :root override.
+ */
+
+@keyframes cx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cx-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cx-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes cx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cx-pulse-ring {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  70% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@keyframes cx-caret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes cx-scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(400%);
+  }
+}
+
+@layer utilities {
+  /* ------------------------------------------------- scroll-triggered reveal
+     Driven by hooks/useReveal.ts (IntersectionObserver) toggling .is-visible.
+     Stagger via inline --i. */
+  .cx-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity var(--duration-slow) var(--ease-custom),
+      transform var(--duration-slow) var(--ease-custom);
+    transition-delay: calc(var(--i, 0) * var(--stagger, 60ms));
+    will-change: opacity, transform;
+  }
+
+  .cx-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Masked line reveal — the headline treatment from Noax's hero. */
+  .cx-mask-line {
+    display: block;
+    overflow: hidden;
+  }
+
+  .cx-mask-line > span {
+    display: block;
+    transform: translateY(110%);
+    transition: transform var(--duration-slowest) var(--ease-custom);
+    transition-delay: calc(var(--i, 0) * var(--stagger, 70ms));
+  }
+
+  .is-visible .cx-mask-line > span,
+  .cx-mask-line.is-visible > span {
+    transform: translateY(0);
+  }
+
+  /* ---------------------------------------------- clip-path wipe (page enter)
+     Noax wipes the nav button in from the left with a 1.2s custom curve. */
+  .cx-wipe {
+    clip-path: inset(-20% -20% -20% -20% round 5em);
+    transition: clip-path var(--duration-slowest) var(--ease-custom) 0.2s;
+  }
+
+  .cx-wipe[data-state="hidden"] {
+    clip-path: inset(0% 100% 0% 0% round 5em);
+    transition: none;
+  }
+
+  /* ---------------------------------------------------------------- marquee */
+  .cx-marquee {
+    display: flex;
+    width: max-content;
+    animation: cx-marquee var(--marquee-duration, 32s) linear infinite;
+  }
+
+  .cx-marquee[data-reverse="true"] {
+    animation-direction: reverse;
+  }
+
+  .cx-marquee-host:hover .cx-marquee {
+    animation-play-state: paused;
+  }
+
+  /* ------------------------------------------------------------- card "peel"
+     Noax rotates a hovered card -2deg on its bounce curve. */
+  .cx-peel {
+    transition: transform var(--duration-slow) var(--ease-bounce);
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cx-peel:hover {
+      transform: rotate(-2deg);
+    }
+  }
+
+  /* ------------------------------------------------------------ accent ring */
+  .cx-pulse-ring::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid var(--cx-accent);
+    animation: cx-pulse-ring 2.4s var(--ease-out-cubic) infinite;
+    pointer-events: none;
+  }
+
+  .cx-caret::after {
+    content: "";
+    display: inline-block;
+    width: 0.55ch;
+    height: 1.05em;
+    margin-left: 0.15em;
+    vertical-align: -0.18em;
+    background: var(--cx-accent);
+    animation: cx-caret 1s steps(1) infinite;
+  }
+
+  .cx-spin {
+    animation: cx-spin 0.9s linear infinite;
+  }
+
+  /* Anatomical "scan line" over the viewer stage. */
+  .cx-scanline::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    height: 22%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in oklab, var(--cx-accent) 26%, transparent),
+      transparent
+    );
+    animation: cx-scan 5.5s var(--ease-in-out-sine) infinite;
+    pointer-events: none;
+  }
+}
+
+/* ---------------------------------------------------------------- reduced
+   motion — Noax zeroes every duration token instead of hiding elements, so
+   layout and end-states stay identical. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0s;
+    --duration: 0s;
+    --duration-medium: 0s;
+    --duration-slow: 0s;
+    --duration-slower: 0s;
+    --duration-slowest: 0s;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .cx-reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .cx-mask-line > span {
+    transform: none;
+  }
+
+  .cx-marquee {
+    animation: none;
+  }
+}

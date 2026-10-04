@@ -1,0 +1,176 @@
+/**
+ * CORPUS design tokens
+ * ---------------------------------------------------------------------------
+ * Adapted from the Noax design language (trevornoah.com mirror in this repo,
+ * see ../main.css). Every value below was lifted from Noax's compiled
+ * stylesheet and then mapped onto CORPUS's anatomy-learning surfaces.
+ *
+ * Palette is kept 1:1 with Noax by product decision:
+ *   navy  #1d2440  (canvas)   cream #f9fcf4 (surface)   blush #ff9bb4 (accent)
+ *
+ * Tailwind v4 `@theme` blocks below generate the utility classes
+ * (bg-ink, text-cream, text-h2, ease-bounce, ...). The `:root` blocks hold the
+ * tokens that are consumed through var() only.
+ */
+
+@theme {
+  /* ---------------------------------------------------------------- colour */
+  --color-ink: #1d2440; /* Noax --color-background / --color-primary */
+  --color-ink-deep: #1a2037; /* Noax --color-surface-deep */
+  --color-ink-tint: #3e486f; /* Noax --color-surface-deep-tint */
+  --color-ink-muted: #6f7ba9; /* Noax --color-surface-deep-muted */
+  --color-cream: #f9fcf4; /* Noax --color-surface */
+  --color-cream-tint: #edf4f4; /* Noax --color-surface-tint */
+  --color-cream-tint-light: #f8fffd; /* Noax --color-surface-tint-light */
+  --color-blush: #ff9bb4; /* Noax --color-accent */
+  --color-hairline: #f2f1ff; /* Noax --color-border */
+  --color-pill: #46517b; /* Noax --color-pill-bg */
+  --color-pill-stroke: #615e83; /* Noax --color-pill-stroke */
+  --color-crimson: #c6313e; /* Noax --color-heart — repurposed as the anatomical accent */
+  --color-night: #2b2b2b; /* Noax --color-dark (menu overlay) */
+
+  /* ------------------------------------------------------------ type scale */
+  /* Fluid clamps are Noax's own: desktop 1920 / mobile 390 design widths. */
+  --font-size-display: clamp(4.5rem, 1.4rem + 12.5vw, 20rem); /* hero wordmark */
+  --font-size-h1: clamp(3.5rem, 1.2rem + 9.5vw, 13rem); /* section statement */
+  --font-size-h2: clamp(2.5rem, 1.07658rem + 5.66535vw, 7.875rem);
+  --font-size-h3: clamp(2.5rem, 2.00346rem + 1.97628vw, 4.375rem);
+  --font-size-h4: clamp(0.75rem, 0.452075rem + 1.18577vw, 1.875rem);
+  --font-size-h5: clamp(0.75rem, 0.452075rem + 1.18577vw, 1.875rem);
+  --font-size-h6: 1rem;
+  --font-size-lead: clamp(1.4375rem, 0.990613rem + 1.77866vw, 3.125rem); /* Noax --font-size-big */
+  --font-size-body: clamp(1.125rem, 1.0919rem + 0.131752vw, 1.25rem);
+  --font-size-small: 0.9375rem;
+  --font-size-smaller: 0.75rem;
+  --font-size-pill: clamp(0.75rem, 0.700346rem + 0.197628vw, 0.9375rem);
+  --font-size-marquee: clamp(3.125rem, 0.642292rem + 9.88142vw, 12.5rem);
+  --font-size-menu: clamp(2.0625rem, 1.28458rem + 3.09618vw, 5rem);
+  --font-size-counter: clamp(5rem, 1.02941rem + 16.1765vw, 14rem); /* preloader */
+
+  --font-weight-body: 400;
+  --font-weight-strong: 600;
+  --font-weight-display: 700;
+
+  /* -------------------------------------------------------------- families */
+  /* Noax ships "Die Grotesk C/D/B" (Webflow-licensed, not redistributable).
+     CORPUS uses open equivalents with the same grotesque character; see the
+     <link> in app/layout.tsx. The stack degrades to system grotesques. */
+  --font-display: "Bricolage Grotesque", "Archivo Expanded", "Helvetica Neue",
+    "Segoe UI Variable Display", system-ui, sans-serif;
+  --font-sans: "Familjen Grotesk", "Instrument Sans", "Helvetica Neue", system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, monospace;
+
+  /* ---------------------------------------------------------------- radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1.25rem;
+
+  /* --------------------------------------------------------------- spacing */
+  --spacing-fluid-sm: clamp(1.375rem, 1.20949rem + 0.658762vw, 2rem);
+  --spacing-fluid-md: clamp(1.125rem, 0.429842rem + 2.7668vw, 3.75rem);
+  --spacing-fluid-lg: clamp(3rem, 2.20553rem + 3.16206vw, 6rem);
+  --spacing-fluid-xl: clamp(4rem, 2.94071rem + 4.21607vw, 8rem);
+  --spacing-fluid-2xl: clamp(5.5rem, 4.04348rem + 5.7971vw, 11rem);
+  --spacing-fluid-3xl: clamp(7.625rem, 5.93676rem + 6.71937vw, 14rem);
+
+  /* -------------------------------------------------------------- easings */
+  /* Noax's full curve library. The signature ones are --ease, --ease-custom
+     and the three bounce curves. */
+  --ease-in-sine: cubic-bezier(0.47, 0, 0.745, 0.715);
+  --ease-out-sine: cubic-bezier(0.39, 0.575, 0.565, 1);
+  --ease-in-out-sine: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out-expo: cubic-bezier(1, 0, 0, 1);
+  --ease-out-circ: cubic-bezier(0.075, 0.82, 0.165, 1);
+  --ease: cubic-bezier(0.645, 0, 0, 1);
+  --ease-custom: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-bounce: cubic-bezier(0.17, 0.67, 0.3, 1.33);
+  --ease-bounce-smooth: cubic-bezier(0.5, 1.8, 0.62, 1);
+  --ease-bounce-soft: cubic-bezier(0.4, 1.65, 0.3, 1);
+}
+
+:root {
+  /* --------------------------------------------------------- base geometry */
+  --spacing: 0.25rem;
+  --grid-gutter: clamp(10px, 10px + 30 * (100vw - 402px) / 1518, 40px);
+  --grid-margin: clamp(20px, 20px + 40 * (100vw - 402px) / 1518, 60px);
+  --grid-max: calc(1920px - var(--grid-margin) * 2);
+
+  /* ------------------------------------------------------------- durations */
+  --duration-fast: 0.15s;
+  --duration: 0.3s;
+  --duration-medium: 0.45s;
+  --duration-slow: 0.6s;
+  --duration-slower: 0.9s;
+  --duration-slowest: 1.2s;
+
+  /* --------------------------------------------------------------- z-index */
+  --z-below: -1;
+  --z-base: 0;
+  --z-above: 1;
+  --z-sticky: 50;
+  --z-header: 100;
+  --z-menu: 200;
+  --z-modal: 302;
+  --z-preloader: 10001;
+
+  /* ------------------------------------------------------- button geometry */
+  --button-height: clamp(3.375rem, 3.27569rem + 0.395257vw, 3.75rem);
+  --button-font-size: clamp(1.125rem, 1.04224rem + 0.329381vw, 1.4375rem);
+  --button-font-weight: 500;
+  --button-radius: calc(var(--button-height) / 2);
+  --button-padding: 0 calc(var(--spacing) * 8);
+  --button-gap: calc(var(--spacing) * 6);
+  --button-height-lg: clamp(3.75rem, 3.08794rem + 2.63505vw, 6.25rem);
+  --button-font-size-lg: clamp(1.25rem, 1.11759rem + 0.527009vw, 1.75rem);
+  --button-font-weight-lg: 700;
+  --button-padding-lg: 0 calc(var(--spacing) * 10);
+  --button-gap-lg: calc(var(--spacing) * 8);
+
+  /* ---------------------------------------------------- semantic theming */
+  /* CORPUS alternates navy canvas with cream "paper" sections, the same
+     duality Noax uses between its WebGL stage and content blocks. */
+  --cx-canvas: var(--color-ink);
+  --cx-canvas-soft: var(--color-ink-deep);
+  --cx-foreground: var(--color-cream);
+  --cx-accent: var(--color-blush);
+  --cx-line: color-mix(in oklab, var(--cx-foreground) 16%, transparent);
+  --cx-muted: color-mix(in oklab, var(--cx-foreground) 58%, transparent);
+
+  /* Focus ring — Noax uses a wide 10px auto ring in the accent colour. */
+  --focus-color: var(--color-blush);
+  --focus-offset: 4px;
+  --focus-width: 3px;
+}
+
+/* Cream ("paper") variant — used by editorial and auth surfaces. */
+.surface-cream {
+  --cx-canvas: var(--color-cream);
+  --cx-canvas-soft: var(--color-cream-tint);
+  --cx-foreground: var(--color-ink);
+  --cx-accent: var(--color-crimson);
+  --cx-line: color-mix(in oklab, var(--color-ink) 14%, transparent);
+  --cx-muted: color-mix(in oklab, var(--color-ink) 62%, transparent);
+  --focus-color: var(--color-crimson);
+  color-scheme: light;
+}
+
+/* The anatomy viewer stage always runs dark, whatever wraps it. */
+.surface-stage {
+  --cx-canvas: var(--color-ink-deep);
+  --cx-canvas-soft: #141a2e;
+  --cx-foreground: var(--color-cream);
+  --cx-accent: var(--color-blush);
+  --cx-line: color-mix(in oklab, var(--color-cream) 18%, transparent);
+  --cx-muted: var(--color-ink-muted);
+  color-scheme: dark;
+}

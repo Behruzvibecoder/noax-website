@@ -1,5 +1,11 @@
 # trevornoah.com — to'liq lokal nusxa (1:1)
 
+> **CORPUS ilovasi** — Noax dizayn tilidan foydalanib qurilgan anatomy-learning
+> mahsuloti [`corpus/`](./corpus) papkasida. Boshlanish nuqtasi:
+> [`corpus/README.md`](./corpus/README.md), dizayn mapping esa
+> [`corpus/docs/design-language.md`](./corpus/docs/design-language.md).
+> Quyidagi hujjat esa shu papkadagi **Noax mirror'**iga tegishli.
+
 **Jonli:** https://behruzvibecoder.github.io/noax-website/
 **Repo:** https://github.com/Behruzvibecoder/noax-website
 (base path: `/noax-website` — `set_base.py` bilan o'rnatilgan)

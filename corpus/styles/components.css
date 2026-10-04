@@ -1,0 +1,498 @@
+/**
+ * CORPUS component styles.
+ * Class-for-class adapted from Noax: .button/.button_pill, .card_peel,
+ * .menu_wrap, .preloader_wrap, .progress_bar, .social_link stroke ring.
+ * Kept as plain CSS (not Tailwind utilities) so the design language stays in
+ * one place and can be lifted into any stack.
+ */
+
+@layer components {
+  /* ================================================================ BUTTON */
+  /* Noax's button is a cream pill on navy that flips to the blush accent on
+     hover, with an inner pill that rotates -5deg and scales 1.02 on a bounce
+     curve. */
+  .cx-button {
+    --_bg: var(--cx-foreground);
+    --_fg: var(--cx-canvas);
+    --_hover-bg: var(--color-blush);
+    --_hover-fg: var(--color-ink);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--button-gap);
+    height: var(--button-height);
+    padding: var(--button-padding);
+    border: 0;
+    border-radius: var(--button-radius);
+    background: transparent;
+    color: var(--_fg);
+    font-family: var(--font-sans);
+    font-size: var(--button-font-size);
+    font-weight: var(--button-font-weight);
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      color var(--duration) var(--ease),
+      transform var(--duration-medium) var(--ease-bounce);
+  }
+
+  .cx-button__pill {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--_bg);
+    transition:
+      transform var(--duration-medium) var(--ease-bounce),
+      background-color var(--duration) var(--ease);
+    pointer-events: none;
+  }
+
+  .cx-button__label {
+    position: relative;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cx-button:hover {
+      color: var(--_hover-fg);
+    }
+    .cx-button:hover .cx-button__pill {
+      background-color: var(--_hover-bg);
+      transform: rotate(-5deg) scale(1.02);
+    }
+  }
+
+  .cx-button:active {
+    transform: scale(0.98);
+  }
+
+  .cx-button:disabled,
+  .cx-button[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .cx-button--lg {
+    --button-height: var(--button-height-lg);
+    --button-font-size: var(--button-font-size-lg);
+    --button-font-weight: var(--button-font-weight-lg);
+    --button-padding: var(--button-padding-lg);
+    --button-gap: var(--button-gap-lg);
+  }
+
+  .cx-button--sm {
+    --button-height: 2.5rem;
+    --button-font-size: var(--font-size-small);
+    --button-padding: 0 calc(var(--spacing) * 6);
+    --button-gap: calc(var(--spacing) * 3);
+  }
+
+  /* Ghost variant: outlined, fills with the accent on hover. */
+  .cx-button--ghost {
+    --_bg: transparent;
+    --_fg: var(--cx-foreground);
+    box-shadow: inset 0 0 0 1px var(--cx-line);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cx-button--ghost:hover {
+      color: var(--color-ink);
+      box-shadow: inset 0 0 0 1px transparent;
+    }
+    .cx-button--ghost:hover .cx-button__pill {
+      background-color: var(--_hover-bg);
+    }
+  }
+
+  /* Accent variant — the primary CTA. */
+  .cx-button--accent {
+    --_bg: var(--color-blush);
+    --_fg: var(--color-ink);
+    --_hover-bg: var(--color-cream);
+    --_hover-fg: var(--color-ink);
+  }
+
+  .cx-button--block {
+    width: 100%;
+  }
+
+  /* ================================================================= PILL */
+  .cx-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.45em 0.95em;
+    border-radius: 999px;
+    background: var(--color-pill);
+    box-shadow: inset 0 0 0 1px var(--color-pill-stroke);
+    color: var(--color-cream);
+    font-size: var(--font-size-pill);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .cx-chip--accent {
+    background: var(--color-blush);
+    box-shadow: none;
+    color: var(--color-ink);
+  }
+
+  .cx-chip--outline {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--cx-line);
+    color: var(--cx-foreground);
+  }
+
+  .cx-chip--crimson {
+    background: var(--color-crimson);
+    box-shadow: none;
+    color: var(--color-cream);
+  }
+
+  /* ================================================================= CARD */
+  .cx-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    background: var(--cx-canvas-soft);
+    box-shadow: inset 0 0 0 1px var(--cx-line);
+    overflow: hidden;
+    transition:
+      box-shadow var(--duration) var(--ease),
+      transform var(--duration-slow) var(--ease-bounce),
+      background-color var(--duration) var(--ease);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cx-card:hover {
+      box-shadow: inset 0 0 0 1px var(--cx-accent);
+      transform: translateY(-4px);
+    }
+  }
+
+  .cx-card__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        120% 100% at 20% 0%,
+        color-mix(in oklab, var(--cx-accent) 24%, transparent),
+        transparent 60%
+      ),
+      var(--color-ink-deep);
+  }
+
+  .cx-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+  }
+
+  /* A hairline "peel" corner, echoing Noax's card_peel SVG flap. */
+  .cx-card__peel {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-start: 0;
+    width: 3.5rem;
+    height: 3.5rem;
+    background: linear-gradient(
+      225deg,
+      var(--cx-accent) 0 50%,
+      transparent 50% 100%
+    );
+    opacity: 0;
+    transform: translate(40%, -40%);
+    transition:
+      opacity var(--duration) var(--ease),
+      transform var(--duration-slow) var(--ease-bounce);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cx-card:hover .cx-card__peel {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  /* ================================================================ INPUT */
+  .cx-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cx-label {
+    font-size: var(--font-size-pill);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cx-muted);
+  }
+
+  .cx-input,
+  .cx-textarea {
+    width: 100%;
+    min-height: 3.5rem;
+    padding: 0.9rem 1.1rem;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--cx-foreground) 6%, transparent);
+    box-shadow: inset 0 0 0 1px var(--cx-line);
+    color: var(--cx-foreground);
+    font-size: var(--font-size-body);
+    transition:
+      box-shadow var(--duration) var(--ease),
+      background-color var(--duration) var(--ease);
+  }
+
+  .cx-textarea {
+    min-height: 7rem;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  .cx-input::placeholder,
+  .cx-textarea::placeholder {
+    color: var(--cx-muted);
+    opacity: 0.7;
+  }
+
+  .cx-input:hover,
+  .cx-textarea:hover {
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--cx-foreground) 34%, transparent);
+  }
+
+  .cx-input:focus-visible,
+  .cx-textarea:focus-visible {
+    outline: none;
+    background: color-mix(in oklab, var(--cx-foreground) 10%, transparent);
+    box-shadow:
+      inset 0 0 0 1px var(--cx-accent),
+      0 0 0 3px color-mix(in oklab, var(--cx-accent) 28%, transparent);
+  }
+
+  .cx-hint {
+    font-size: var(--font-size-small);
+    color: var(--cx-muted);
+  }
+
+  .cx-error {
+    font-size: var(--font-size-small);
+    color: var(--color-blush);
+  }
+
+  /* ========================================================= MENU OVERLAY */
+  /* Noax's menu unfolds downward with clip-path: inset() on a 0.9s curve and
+     flips the canvas to --color-dark. */
+  .cx-menu {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-menu);
+    display: flex;
+    flex-direction: column;
+    background: var(--color-night);
+    color: var(--color-cream);
+    clip-path: inset(0% 0% 100% 0% round 0rem);
+    visibility: hidden;
+    transition:
+      clip-path var(--duration-slower) var(--ease),
+      visibility 0s var(--duration-slower);
+  }
+
+  .cx-menu[data-state="open"] {
+    clip-path: inset(0% 0% 0% 0% round 0rem);
+    visibility: visible;
+    transition:
+      clip-path var(--duration-slower) var(--ease),
+      visibility 0s;
+  }
+
+  .cx-menu__item {
+    position: relative;
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--font-size-menu);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: 0;
+    color: var(--color-cream);
+    transition: color var(--duration) var(--ease);
+  }
+
+  /* The underline sweeps out from the left on a stagger, as in Noax. */
+  .cx-menu__item::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0.12em;
+    height: 2px;
+    background: var(--color-blush);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--duration-slower) var(--ease)
+      calc(var(--i, 0) * 0.12s);
+  }
+
+  .cx-menu[data-state="open"] .cx-menu__item::before {
+    transform: scaleX(1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cx-menu__item:hover {
+      color: var(--color-blush);
+    }
+  }
+
+  .cx-menu__item[aria-current="page"] {
+    color: var(--color-blush);
+  }
+
+  /* ============================================================ PRELOADER */
+  .cx-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-preloader);
+    display: grid;
+    place-items: center;
+    background: var(--color-ink);
+    opacity: 1;
+    transition:
+      opacity var(--duration-slow) var(--ease),
+      visibility 0s;
+  }
+
+  .cx-preloader[data-state="done"] {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .cx-preloader__counter {
+    font-family: var(--font-display);
+    font-size: var(--font-size-counter);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-blush);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ========================================================= PROGRESS BAR */
+  .cx-progress {
+    position: relative;
+    height: 3px;
+    width: 100%;
+    background: color-mix(in oklab, var(--cx-foreground) 16%, transparent);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .cx-progress__fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: calc(var(--value, 0) * 100%);
+    background: var(--cx-accent);
+    border-radius: inherit;
+    transition: width var(--duration-slow) var(--ease-custom);
+  }
+
+  /* ========================================================== PROGRESS RING
+     Noax's social links animate stroke-dashoffset from a --progress var; the
+     same technique powers CORPUS mastery rings. */
+  .cx-ring circle {
+    transition: stroke-dashoffset var(--duration-slower) var(--ease-custom);
+  }
+
+  /* ================================================================ TABLE */
+  .cx-list-row {
+    display: grid;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 1rem;
+    border-block-start: 1px solid var(--cx-line);
+    transition: background-color var(--duration) var(--ease);
+  }
+
+  .cx-list-row:last-child {
+    border-block-end: 1px solid var(--cx-line);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cx-list-row:hover {
+      background: color-mix(in oklab, var(--cx-foreground) 4%, transparent);
+    }
+  }
+
+  /* ============================================================= CHAT/TUTOR */
+  .cx-bubble {
+    max-width: 62ch;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-lg);
+    line-height: 1.5;
+  }
+
+  .cx-bubble--tutor {
+    background: var(--cx-canvas-soft);
+    box-shadow: inset 0 0 0 1px var(--cx-line);
+    border-start-start-radius: var(--radius-sm);
+  }
+
+  .cx-bubble--user {
+    background: var(--color-blush);
+    color: var(--color-ink);
+    border-start-end-radius: var(--radius-sm);
+    margin-inline-start: auto;
+  }
+
+  /* Source chips returned by the RAG layer. */
+  .cx-source {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.3em 0.7em;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--cx-accent) 14%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--cx-accent) 34%, transparent);
+    color: var(--cx-foreground);
+    font-size: var(--font-size-smaller);
+    font-weight: 600;
+  }
+
+  /* ========================================================= ANATOMY STAGE */
+  .cx-stage {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(
+        90% 70% at 50% 10%,
+        color-mix(in oklab, var(--color-blush) 12%, transparent),
+        transparent 65%
+      ),
+      linear-gradient(180deg, var(--color-ink-deep), #12172a);
+    box-shadow: inset 0 0 0 1px var(--cx-line);
+  }
+
+  /* Concentric guide grid — stands in for the 3D viewer until it is mounted. */
+  .cx-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, var(--cx-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--cx-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(70% 60% at 50% 50%, #000 30%, transparent 100%);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}

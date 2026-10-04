@@ -1,0 +1,18 @@
+/**
+ * CORPUS global stylesheet entry.
+ *
+ * `source(none)` + explicit @source directives are deliberate: this app lives
+ * inside a git repository whose root also contains the Noax mirror (multi-MB
+ * HTML/JS). Without this, Tailwind v4's automatic content detection would
+ * crawl the mirror as well.
+ */
+@import "tailwindcss" source(none);
+@source "../app";
+@source "../components";
+@source "../hooks";
+@source "../lib";
+
+@import "../styles/tokens.css";
+@import "../styles/base.css";
+@import "../styles/motion.css";
+@import "../styles/components.css";
