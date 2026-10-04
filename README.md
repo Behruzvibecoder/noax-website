@@ -1,5 +1,9 @@
 # trevornoah.com — to'liq lokal nusxa (1:1)
 
+**Jonli:** https://behruzvibecoder.github.io/noax-website/
+**Repo:** https://github.com/Behruzvibecoder/noax-website
+(base path: `/noax-website` — `set_base.py` bilan o'rnatilgan)
+
 Saytning **o'z manbalari** yuklab olingan va lokalda ishlayapti: Webflow HTML, `main.css`,
 ES-module JS bundle'lari (`app.js` + `chunk-*.js`), Die Grotesk shriftlari, barcha rasmlar,
 va eng muhimi — **WebGL sahna fayllari** (Three.js GLB modellar, KTX2/EXR teksturalar, Basis transcoder).
