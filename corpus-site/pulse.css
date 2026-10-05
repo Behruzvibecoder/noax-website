@@ -1,0 +1,240 @@
+/* ============================================================================
+   CORPUS — PULSE
+   ----------------------------------------------------------------------------
+   One idea, applied consistently: the accent colour is arterial blood, so it
+   moves at 60 bpm. Every timed value in this file is a real physiological
+   rate, not a UI convention.
+
+     60 bpm   = 1 beat / s   -> the accent, and the ECG sweep
+     12 /min  = 1 breath / 5s -> section rhythm
+     ECG paper = 1 mm small square, 5 mm large square -> the trace grid
+
+   Nothing here pulses except the accent. Containers never move on the beat.
+   prefers-reduced-motion collapses every animation to a static end state —
+   a permanently pulsing interface is an accessibility hazard, not a flourish.
+   ========================================================================= */
+
+:root {
+  --bpm: 60;
+  --beat: 1s;                          /* 60 / 60 */
+  --breath: 5s;                        /* 60 / 12 */
+  --arterial: #ff9bb4;                 /* Noax --color-accent, given a reason */
+  --alert: #c6313e;                    /* Noax --color-heart */
+  --ecg-grid: rgba(255, 155, 180, 0.13);
+  --ecg-grid-major: rgba(255, 155, 180, 0.24);
+}
+
+/* ------------------------------------------------- the heartbeat itself
+   A real beat is lub-dub: systole, a brief settle, diastole, then rest.
+   A sine wave would be wrong and would read as a loading spinner.       */
+@keyframes cx-lub-dub {
+  0%   { opacity: 1;    transform: scale(1);     filter: none; }
+  7%   { opacity: 1;    transform: scale(1.09);  filter: drop-shadow(0 0 14px rgba(255,155,180,.55)); }
+  15%  { opacity: .92;  transform: scale(1.01);  filter: none; }
+  23%  { opacity: .97;  transform: scale(1.045); filter: drop-shadow(0 0 8px rgba(255,155,180,.3)); }
+  34%  { opacity: 1;    transform: scale(1);     filter: none; }
+  100% { opacity: 1;    transform: scale(1);     filter: none; }
+}
+
+/* One cardiac cycle travels one grid cycle per beat. */
+@keyframes cx-ecg-sweep {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-16.6667%, 0, 0); }
+}
+
+@keyframes cx-breathe {
+  0%, 100% { opacity: .34; }
+  42%      { opacity: .72; }
+}
+
+/* Line art drawing itself in, at ECG sweep speed. */
+@keyframes cx-draw-in {
+  from { stroke-dashoffset: var(--len, 1200); }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* ============================================================ VITALS STRIP */
+.vitals {
+  position: relative;
+  width: 100%;
+  margin-block: clamp(1.5rem, 4vw, 3.5rem);
+  border-block: 1px solid rgba(249, 252, 244, 0.12);
+  background:
+    linear-gradient(180deg, rgba(26, 32, 55, 0.9), rgba(26, 32, 55, 0.55));
+}
+
+.vitals__inner {
+  display: grid;
+  grid-template-columns: minmax(9rem, auto) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(1rem, 2.5vw, 1.75rem) var(--grid-margin, 20px);
+}
+
+/* --- the rate. Giant tabular numerals: in medicine the number IS the content. */
+.vitals__rate {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35em;
+}
+
+.vitals__bpm {
+  display: inline-block;
+  font-family: var(--font-secondary, "Die Grotesk D", sans-serif);
+  font-size: clamp(3.5rem, 9vw, 6.5rem);
+  font-weight: 700;
+  line-height: 0.85;
+  color: var(--arterial);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  transform-origin: 50% 60%;
+  animation: cx-lub-dub var(--beat) linear infinite;
+  will-change: transform, opacity;
+}
+
+.vitals__unit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  font-size: clamp(0.75rem, 1.4vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(249, 252, 244, 0.62);
+}
+
+.vitals__unit em {
+  font-style: normal;
+  font-size: 0.85em;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: rgba(249, 252, 244, 0.4);
+}
+
+/* --- the trace. Authentic ECG paper: 1 mm small, 5 mm large. */
+.vitals__trace {
+  position: relative;
+  height: clamp(4.5rem, 11vw, 7.5rem);
+  overflow: hidden;
+  border-radius: 2px;
+  background-image:
+    linear-gradient(to right, var(--ecg-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ecg-grid) 1px, transparent 1px),
+    linear-gradient(to right, var(--ecg-grid-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ecg-grid-major) 1px, transparent 1px);
+  background-size: 12px 12px, 12px 12px, 60px 60px, 60px 60px;
+  animation: cx-breathe var(--breath) ease-in-out infinite;
+}
+
+/* The path group is 6 cycles wide; translating exactly one cycle per beat
+   makes the loop seamless and ties scroll speed to the heart rate. */
+.vitals__sweep {
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: cx-ecg-sweep var(--beat) linear infinite;
+  will-change: transform;
+}
+
+.vitals__sweep svg {
+  width: 600%;   /* 6 cycles; only 1 visible at a time */
+  height: 100%;
+  display: block;
+}
+
+.vitals__path {
+  fill: none;
+  stroke: var(--arterial);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* --- the readouts. Atlas counts presented as monitor values. */
+.vitals__legend {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid rgba(249, 252, 244, 0.12);
+}
+
+.vitals__legend > div {
+  padding: clamp(0.75rem, 2vw, 1.1rem) var(--grid-margin, 20px);
+  border-inline-start: 1px solid rgba(249, 252, 244, 0.08);
+}
+
+.vitals__legend > div:first-child {
+  border-inline-start: 0;
+  padding-inline-start: var(--grid-margin, 20px);
+}
+
+.vitals__legend dt {
+  font-size: clamp(0.65rem, 1.1vw, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(249, 252, 244, 0.42);
+}
+
+.vitals__legend dd {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-secondary, "Die Grotesk D", sans-serif);
+  font-size: clamp(1.5rem, 3.6vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: #f9fcf4;
+}
+
+.vitals__legend dd span {
+  font-size: 0.42em;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(249, 252, 244, 0.45);
+  margin-inline-start: 0.4em;
+}
+
+/* A hairline that draws itself in on the signature Noax curve. */
+@keyframes cx-rule-in {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.vitals__rule {
+  height: 1px;
+  background: var(--arterial);
+  transform-origin: left center;
+  animation: cx-rule-in 1.4s cubic-bezier(0.645, 0, 0, 1) 0.25s both;
+}
+
+/* ============================================================ RESPONSIVE */
+@media (max-width: 720px) {
+  .vitals__inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+  .vitals__legend {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .vitals__legend > div {
+    border-inline-start: 0;
+    border-top: 1px solid rgba(249, 252, 244, 0.08);
+    padding-inline: var(--grid-margin, 20px);
+  }
+  .vitals__legend > div:first-child { border-top: 0; }
+}
+
+/* ====================================================== REDUCED MOTION
+   Every animation resolves to its static end state. The rate still reads 60,
+   the trace is still drawn, the grid is still there — nothing is lost except
+   movement. This is not optional: a permanently pulsing UI is a hazard. */
+@media (prefers-reduced-motion: reduce) {
+  .vitals__bpm,
+  .vitals__trace,
+  .vitals__sweep {
+    animation: none !important;
+  }
+  .vitals__trace { opacity: 1; }
+  .vitals__rule { animation: none; transform: scaleX(1); }
+}
