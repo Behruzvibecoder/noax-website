@@ -1,0 +1,7 @@
+# Everything here is copied from the Noax mirror by build.sh.
+# Only index.html, build.sh and README.md are authored and tracked.
+*
+!.gitignore
+!index.html
+!build.sh
+!README.md
