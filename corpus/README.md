@@ -55,6 +55,36 @@ npm run typecheck  # tsc --noEmit
 | `/api/rag/search` | `GET ?q=` — retrieval only |
 | `/auth/callback`, `/auth/signout` | Supabase OAuth / magic-link handlers |
 
+## Previewing on a phone
+
+The Arena sandbox preview is **gated to the Arena client** — it will not open in
+a standalone browser tab, and it cannot be tunnelled out, because sandbox egress
+only reaches `registry.npmjs.org` and `github.com`.
+
+Two options that actually work:
+
+**1. Open Arena itself on the phone.** The preview is an iframe inside the chat,
+so opening this conversation in a mobile browser renders it there. The app is
+responsive down to 390px, so this is a genuine mobile check, not a shrunken
+desktop view.
+
+**2. Deploy for a standalone URL.** Vercel is the path of least resistance:
+
+- Import the repository, set **Root Directory** to `corpus` (the app is not at
+  the repo root).
+- Framework preset: Next.js — no `vercel.json` needed.
+- No environment variables are required for a reviewable deploy; the app runs
+  on its fallbacks. Add `NEXT_PUBLIC_SUPABASE_URL` and
+  `NEXT_PUBLIC_SUPABASE_ANON_KEY` to switch on route protection and real auth.
+
+### Why not a static export / GitHub Pages
+
+Verified: `output: "export"` fails to build. The app has server route handlers
+(`/api/tutor/chat`, `/api/rag/search`, `/auth/callback`, `/auth/signout`) and
+`/login` reads `searchParams` — none of which exist in a static export. Making
+one would mean deleting the API layer, i.e. changing the architecture rather
+than just the presentation. Not worth it for a preview.
+
 ## Database
 
 ```bash
